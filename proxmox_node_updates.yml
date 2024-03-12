@@ -17,7 +17,7 @@
 
     - name: Check for Kernel Update
       debug:
-        msg: "Kernel needs reboot: {{ (ansible_kernel | regex_replace('^([0-9.]+).*')) != ansible_facts['proxmox_version'] OR ansible_facts.get('proxmox_version', 'Not available') }}"
+        msg: "Kernel needs reboot: {{ (ansible_kernel | regex_replace('^([0-9.]+).*')) != ansible_facts['proxmox_version'] OR ansible_facts.get('proxmox_version') }}"
 
     - name: Acquire Semaphore Lock
       shell: touch /tmp/proxmox_upgrade_semaphore.lock
