@@ -4,6 +4,17 @@
   become: true
   gather_facts: yes
 
+  - name: Gather Facts (including Proxmox Version)
+  setup:
+
+- name: Debug ansible_kernel
+  debug:
+    msg: "ansible_kernel: {{ ansible_kernel }}"
+
+- name: Debug Proxmox Version # (assuming it's a fact)
+  debug:
+    msg: "Proxmox Version: {{ ansible_facts['proxmox_version'] }}"  # Access the fact
+
   tasks:
     - name: Debug ansible_kernel
       debug:
