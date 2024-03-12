@@ -9,7 +9,7 @@
 
     - name: Debug ansible_kernel
       debug:
-        msg: "ansible_kernel: {{ ansible_kernel | regex_replace('^([0-9.]+).*')}}"
+        msg: "ansible_kernel: {{ ansible_kernel | regex_replace('^([0-9.]+).*') }}"
 
     - name: Debug Proxmox Version (assuming it's a fact)
       debug:
