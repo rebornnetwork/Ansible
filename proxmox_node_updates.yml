@@ -1,6 +1,6 @@
 ---
 - name: Upgrade Proxmox Node with Semaphore
-  hosts: allproxmox  # Replace with your node group
+  hosts: "{{ allproxmox }}"  # Replace with your node group
   become: true
 
   tasks:
