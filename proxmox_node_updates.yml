@@ -1,21 +1,23 @@
----
 - name: Upgrade Proxmox Node with Semaphore
   hosts: all  # Replace with your node group
   become: true
   gather_facts: yes
-  
+
   tasks:
+    - name: Gather Facts (including Proxmox Version)
+      setup:
+
     - name: Debug ansible_kernel
       debug:
         msg: "ansible_kernel: {{ ansible_kernel }}"
 
-    - name: Debug proxmox_version.kernel
+    - name: Debug Proxmox Version (assuming it's a fact)
       debug:
-        msg: "proxmox_version.kernel: {{ proxmox_version.kernel }}"
+        msg: "Proxmox Version: {{ ansible_facts['proxmox_version'] }}"  # Access the fact
 
     - name: Check for Kernel Update
       debug:
-        msg: "Kernel needs reboot: {{ ansible_kernel | regex_replace('^([0-9.]+).*') != proxmox_version.kernel }}"
+        msg: "Kernel needs reboot: {{ (ansible_kernel | regex_replace('^([0-9.]+).*')) != ansible_facts['proxmox_version'] }}"
 
     - name: Acquire Semaphore Lock
       shell: touch /tmp/proxmox_upgrade_semaphore.lock
@@ -31,4 +33,4 @@
 
   vars:
     migrate_vms: "{{ 'true' }}"  # Set to false to skip VM migration
-    kernel_needs_reboot: "{{ ansible_kernel | regex_replace('^([0-9.]+).*') != proxmox_version.kernel }}"  # Check for kernel version change
+    # Removed kernel_needs_reboot as it's calculated in the Check for Kernel Update task
