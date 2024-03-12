@@ -43,4 +43,5 @@
 
   vars:
    migrate_vms: "{{ 'true' }}"  # Set to false to skip VM migration
-   kernel_needs_reboot: "{{ ansible_kernel | regex_replace('^([0-9.]+).*') }}" != "{{ proxmox_version.kernel }}"  # Check for kernel version change
+   kernel_needs_reboot: "{{ ansible_kernel | regex_replace('^([0-9.]+).*') }}" != "{{ 'proxmox_version.kernel' }}"  # Check for kernel version change
+
