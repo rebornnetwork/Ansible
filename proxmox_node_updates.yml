@@ -11,9 +11,9 @@
       debug:
         msg: "ansible_kernel: {{ ansible_kernel }}"
 
-    - name: Debug Proxmox Version (assuming it's a fact)
+    - name: Debug Proxmox Version (if available)
       debug:
-        msg: "Proxmox Version: {{ ansible_facts['proxmox_version'] }}"  # Access the fact
+        msg: "Proxmox Version: {{ ansible_facts.get('proxmox_version', 'Not available') }}"
 
     - name: Check for Kernel Update
       debug:
