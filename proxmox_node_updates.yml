@@ -16,9 +16,9 @@
         msg: >
          {% if ansible_facts.proxmox_version is defined %}
          Proxmox Version: {{ ansible_facts.proxmox_version }}
-         {% else %}
-         Proxmox Version: Not available
-         {% endif %}
+          {% else %}
+          Proxmox Version: Not available
+          {% endif %}
 
     - name: Check for Kernel Update
       debug:
