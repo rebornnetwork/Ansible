@@ -2,6 +2,7 @@
 - name: Upgrade Proxmox Node with Semaphore
   hosts: all  # Replace with your node group
   become: true
+  gather_facts: yes
 
   tasks:
     - name: Debug ansible_kernel
