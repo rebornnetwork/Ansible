@@ -13,8 +13,12 @@
 
     - name: Debug Proxmox Version (assuming it's a fact)
       debug:
-        msg: "Proxmox Version: {{ ansible_facts.proxmox_version | default('Not available', true) }}"
-        when: ansible_facts.proxmox_version is defined
+        msg: >
+         {% if ansible_facts.proxmox_version is defined %}
+         Proxmox Version: {{ ansible_facts.proxmox_version }}
+         {% else %}
+         Proxmox Version: Not available
+         {% endif %}
 
     - name: Check for Kernel Update
       debug:
