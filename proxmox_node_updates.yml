@@ -1,6 +1,6 @@
 ---
 - name: Upgrade Proxmox Node with Semaphore
-  hosts: micro0, micro1, micro2, proxback  # Replace with your node group
+  hosts: proxmox_group  # Replace with your node group
   become: true
 
   tasks:
