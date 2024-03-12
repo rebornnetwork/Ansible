@@ -4,11 +4,6 @@
   become: true
 
   tasks:
-    - name: Acquire Semaphore Lock
-      community.general.semaphore:
-        name: proxmox_upgrade
-        timeout: 3600  # Adjust timeout as needed (seconds)
-
     - name: Debug ansible_kernel
       debug:
         msg: "ansible_kernel: {{ ansible_kernel }}"
@@ -20,6 +15,11 @@
     - name: Check for Kernel Update
       debug:
         msg: "Kernel needs reboot: {{ ansible_kernel | regex_replace('^([0-9.]+).*') != proxmox_version.kernel }}"
+
+    - name: Acquire Semaphore Lock
+      community.general.semaphore:
+        name: proxmox_upgrade
+        timeout: 3600  # Adjust timeout as needed (seconds)
 
     - name: Stop Running VMs (Optional)
       virt:
