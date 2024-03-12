@@ -9,6 +9,18 @@
         name: proxmox_upgrade
         timeout: 3600  # Adjust timeout as needed (seconds)
 
+    - name: Debug ansible_kernel
+      debug:
+        msg: "ansible_kernel: {{ ansible_kernel }}"
+
+    - name: Debug proxmox_version.kernel
+      debug:
+        msg: "proxmox_version.kernel: {{ proxmox_version.kernel }}"
+
+    - name: Check for Kernel Update
+      debug:
+        msg: "Kernel needs reboot: {{ ansible_kernel | regex_replace('^([0-9.]+).*') != proxmox_version.kernel }}"
+
     - name: Stop Running VMs (Optional)
       virt:
         name: "{{ item.name }}"
@@ -42,6 +54,5 @@
         state: released
 
   vars:
-   migrate_vms: "{{ 'true' }}"  # Set to false to skip VM migration
-   kernel_needs_reboot: "{{ ansible_kernel | regex_replace('^([0-9.]+).*') }}" != "{{ 'proxmox_version.kernel' }}"  # Check for kernel version change
-
+    migrate_vms: "{{ 'true' }}"  # Set to false to skip VM migration
+    kernel_needs_reboot: "{{ ansible_kernel | regex_replace('^([0-9.]+).*') != proxmox_version.kernel }}"  # Check for kernel version change
