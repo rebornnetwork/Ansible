@@ -5,24 +5,24 @@
 
   tasks:
     - name: Acquire Semaphore Lock
-      community.ansible.semaphore:
+      community.general.semaphore:
         name: proxmox_upgrade
         timeout: 3600  # Adjust timeout as needed (seconds)
 
     - name: Stop Running VMs (Optional)
-      virt-manager:
+      virt:
         name: "{{ item.name }}"
         state: stopped
-        loop: "{{ lookup('query', 'q=status=running') }}"  # Get VMs with quotes
-        when: migrate_vms  # Optional flag for stopping VMs
+      loop: "{{ query('query', 'q=status=running') }}"  # Get VMs with quotes
+      when: migrate_vms  # Optional flag for stopping VMs
 
     - name: Migrate VMs to Other Nodes (Optional)
-      virt-manager:
+      virt:
         name: "{{ item.name }}"
-        live-migration: "{{ item.destination }}"  # Add quotes
-        loop: "{{ lookup('query', 'q=status=running') }}"  # Get VMs (already has quotes)
-        when: migrate_vms  # Optional flag for live migration
-
+        state: migrated
+        migrate_to: "{{ item.destination }}"  # Add quotes
+      loop: "{{ query('query', 'q=status=running') }}"  # Get VMs (already has quotes)
+      when: migrate_vms  # Optional flag for live migration
 
     - name: Upgrade Proxmox Packages
       apt:
@@ -37,7 +37,7 @@
       when: kernel_needs_reboot
 
     - name: Release Semaphore Lock
-      community.ansible.semaphore:
+      community.general.semaphore:
         name: proxmox_upgrade
         state: released
 
