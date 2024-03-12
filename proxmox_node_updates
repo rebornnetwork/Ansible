@@ -1,0 +1,45 @@
+---
+- name: Upgrade Proxmox Node with Semaphore
+  hosts: proxmox_nodes  # Replace with your node group
+  become: true
+
+  tasks:
+    - name: Acquire Semaphore Lock
+      community.ansible.semaphore:
+        name: proxmox_upgrade
+        timeout: 3600  # Adjust timeout as needed (seconds)
+
+    - name: Stop Running VMs (Optional)
+      virt-manager:
+        name: "{{ item.name }}"
+        state: stopped
+      loop: "{{ lookup('query', 'q=status=running')" }}  # Get VMs
+      when: migrate_vms  # Optional flag for stopping VMs
+
+    - name: Migrate VMs to Other Nodes
+      virt-manager:
+        name: "{{ item.name }}"
+        live-migration: "{{ item.destination }}"
+      loop: "{{ lookup('query', 'q=status=running')" }}  # Get VMs
+      when: migrate_vms  # Optional flag for live migration
+
+    - name: Upgrade Proxmox Packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600  # Update cache every hour
+        upgrade: full
+        autoremove: yes
+
+    - name: Reboot if Kernel Update (Optional)
+      reboot:
+        reboot_timeout: 600  # Adjust timeout as needed (seconds)
+      when: kernel_needs_reboot
+
+    - name: Release Semaphore Lock
+      community.ansible.semaphore:
+        name: proxmox_upgrade
+        state: released
+
+  vars:
+    migrate_vms: true  # Set to false to skip VM migration
+    kernel_needs_reboot: "{{ ansible_kernel | regex_replace('^([0-9.]+).*') }}" != "{{ proxmox_version.kernel }}"  # Check for kernel version change
