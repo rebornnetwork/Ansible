@@ -25,7 +25,7 @@
        msg: >
          {% if ansible_facts.proxmox_version is defined %}
           Kernel needs reboot: {{ (ansible_kernel | regex_replace('^([0-9.]+).*')) != ansible_facts['proxmox_version'] }}
-           {% else $}
+           {% else %}
            unable to find proxmox version..? Whoops!
            {% endif %}
 
