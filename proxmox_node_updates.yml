@@ -16,7 +16,7 @@
       debug:
         msg: "Kernel needs reboot: {{ ansible_kernel | regex_replace('^([0-9.]+).*') != proxmox_version.kernel }}"
 
-    - name: Acquire Semaphore Lock
+   - name: Acquire Semaphore Lock
       community.ansible.semaphore:
         name: proxmox_upgrade
         timeout: 3600  # Adjust timeout as needed (seconds)
