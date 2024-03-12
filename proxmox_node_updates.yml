@@ -9,12 +9,12 @@
         name: proxmox_upgrade
         timeout: 3600  # Adjust timeout as needed (seconds)
 
-    - name: Stop Running VMs (Optional)
-      virt-manager:
-        name: "{{ item.name }}"
-        state: stopped
-      loop: "{{ lookup('query', 'q=status=running')" }}  # Get VMs
-      when: migrate_vms  # Optional flag for stopping VMs
+      - name: Stop Running VMs (Optional)
+        virt-manager:
+          name: "{{ item.name }}"
+          state: stopped
+        loop: "{{ lookup('query', 'q=status=running') }}"  # Get VMs with quotes
+        when: migrate_vms  # Optional flag for stopping VMs
 
     - name: Migrate VMs to Other Nodes
       virt-manager:
