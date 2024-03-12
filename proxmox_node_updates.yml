@@ -1,7 +1,4 @@
 ---
-collections:
-- name: community.general
-
 - name: Upgrade Proxmox Node with Semaphore
   hosts: "PROXMOX ALL"  # Replace with your node group
   become: true
