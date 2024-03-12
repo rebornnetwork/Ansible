@@ -16,12 +16,13 @@
         loop: "{{ lookup('query', 'q=status=running') }}"  # Get VMs with quotes
         when: migrate_vms  # Optional flag for stopping VMs
 
-    - name: Migrate VMs to Other Nodes
-      virt-manager:
+    - name: Migrate VMs to Other Nodes (Optional)
+       virt-manager:
         name: "{{ item.name }}"
-        live-migration: "{{ item.destination }}"
-      loop: "{{ lookup('query', 'q=status=running')" }}  # Get VMs
-      when: migrate_vms  # Optional flag for live migration
+        live-migration: "{{ item.destination }}"  # Add quotes
+        loop: "{{ lookup('query', 'q=status=running') }}"  # Get VMs (already has quotes)
+        when: migrate_vms  # Optional flag for live migration
+
 
     - name: Upgrade Proxmox Packages
       apt:
